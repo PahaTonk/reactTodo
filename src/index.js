@@ -6,16 +6,18 @@ import TodoList from './components/todo-list/todo-list';
 import SearchPanel from './components/search-panel';
 
 const App = () => {
-    const isLoggedIn = true;
-    const loginBox = <span>Log in please</span>;
-    const welcomBox = <span>Welcom!</span>;
+
+    const todoData = [
+        { label: 'Drink Coffee', id: 'dc' },
+        { label: 'Make Awesome App', important: true, id: 'maa' },
+        { label: 'Habe a lunch', id: 'hl' }
+    ];
 
     return (
         <div>
-            { isLoggedIn ? welcomBox : loginBox }
             <AppHeader />
             <SearchPanel />
-            <TodoList />
+            <TodoList todos = { todoData }/>
         </div>
     );
 };
