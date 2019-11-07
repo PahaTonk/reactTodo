@@ -10,7 +10,7 @@ const TodoList = ({ todos }) => {
     ) );
 
     return (
-        <ul>
+        <ul className="list-group">
             { elements }
         </ul>
     );
