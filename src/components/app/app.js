@@ -7,8 +7,11 @@ import AppHeader from './../app-header';
 import TodoList from './../todo-list';
 import SearchPanel from './../search-panel';
 import ItemStatusFilter from './../item-status-filter';
+import ItemAddForm from './../item-add-form/index';
 
 export default class App extends Component {
+    itemIdLast = 100;
+
     state = {
         todoData: [
             { label: 'Drink Coffee', id: 'dc' },
@@ -23,6 +26,19 @@ export default class App extends Component {
         }) );
     };
 
+    onAddListItem = (text) => {
+        const itemIdFirst = text.split(' ').map( (item) => item[0]).join('');
+        const newItem = {
+            label: text,
+            important: false,
+            id: `${itemIdFirst}-${++this.itemIdLast}`
+        }
+
+        this.setState( ({ todoData }) => ({
+            todoData: todoData.concat(newItem)
+        }) );
+    };
+
     render () {
         const { todoData } = this.state;
 
@@ -33,10 +49,12 @@ export default class App extends Component {
                     <SearchPanel />
                     <ItemStatusFilter />
                 </div>
-
                 <TodoList
                     todos = { todoData }
                     onDeletedListItem = { this.onDeletedListItem }
+                />
+                <ItemAddForm
+                    onAddListItem = { this.onAddListItem }
                 />
             </div>
         );
