@@ -6,13 +6,13 @@ import './todo-list.css';
 const TodoList = ({ todos }) => {
 
     const elements = todos.map( ({ id, ...item }) => (
-        <li key = { id } className="list-group-item todo-list-item">
+        <li key = { id } className='list-group-item todo-list-item'>
             <TodoListItem { ...item }/>
         </li>
     ) );
 
     return (
-        <ul className="list-group todo-list">
+        <ul className='list-group todo-list'>
             { elements }
         </ul>
     );
