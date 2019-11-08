@@ -1,8 +1,8 @@
 import React from 'react';
 
-import './todo-list.css';
+import './../todo-list.css';
 
-import '../../libs/fotnawesome';
+import './../../../libs/fotnawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const TodoListItem = ({ label, important }) => {
