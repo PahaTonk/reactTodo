@@ -1,3 +1,11 @@
 .item-add-form {
+    justify-content: center;
     margin-top: 10px;
+    padding: .25em .75em;
+}
+.item-add-form input {
+    margin-right: 3px;
+}
+.item-add-form button {
+    flex-shrink: 0;
 }
