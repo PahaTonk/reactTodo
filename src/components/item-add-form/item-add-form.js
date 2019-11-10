@@ -22,15 +22,15 @@ export default class ItemAddForm extends Component {
 
         if (!formInputSearch.value) return;
 
-        formInputSearch.value = '';
-
         this.setState({
             label: ''
         });
         this.props.onAddListItem(this.state.label);
-    }
+    };
 
     render () {
+        const { label } = this.state;
+
         return (
             <form
                 className = 'item-add-form d-flex'
@@ -41,6 +41,7 @@ export default class ItemAddForm extends Component {
                     className = 'form-control todo-input-search'
                     onChange = { this.onLabelChange }
                     placeholder = 'What needs to be done'
+                    value = { label }
                 />
                 <button
                     className = 'btn btn-outline-secondary'
