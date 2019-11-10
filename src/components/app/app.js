@@ -13,10 +13,11 @@ export default class App extends Component {
     itemIdLast = 100;
 
     state = {
+        searchText: this.props.searchText,
         todoData: [
-            this.createTodoItem('Drink Coffee'),
-            this.createTodoItem('Make Awesome App'),
-            this.createTodoItem('Have a lunch')
+            this.createTodoItem('Drink Coffee', this.props.searchText),
+            this.createTodoItem('Make Awesome App', this.props.searchText),
+            this.createTodoItem('Have a lunch', this.props.searchText)
         ]
     };
 
@@ -26,13 +27,13 @@ export default class App extends Component {
         return `${itemIdFirst}-${++this.itemIdLast}`;
     };
 
-    createTodoItem (label) {
+    createTodoItem (label, searchText) {
         return {
             label,
             id: this.createItemId(label),
             important: false,
             done: false,
-            show: true
+            show: this.filterTodoData(label, searchText)
         }
     };
 
@@ -42,8 +43,8 @@ export default class App extends Component {
         }) );
     };
 
-    onAddListItem = (text) => {
-        const newItem = this.createTodoItem(text);
+    onAddListItem = (label) => {
+        const newItem = this.createTodoItem(label, this.state.searchText);
 
         this.setState( ({ todoData }) => ({
             todoData: todoData.concat(newItem)
@@ -70,17 +71,23 @@ export default class App extends Component {
         } );
     };
 
-    onSearchItems = (text) => {
+    filterTodoData (label, searchText) {
+        const regExp = new RegExp(searchText, 'gi');
+
+        return !(label.search(regExp) === -1);
+    }
+
+    onSearchItems = (searchText) => {
         this.setState( ({ todoData }) => {
-            const regExp = new RegExp(text, 'gi')
             const newTodoData = [ ...todoData ].map( (item) => {
-                item.show = item.label.search(regExp) === -1 ? false : true;
+                item.show = this.filterTodoData(item.label, searchText);
 
                 return item;
             });
 
             return {
-                todoData: newTodoData
+                todoData: newTodoData,
+                searchText
             }
         } )
 

@@ -5,5 +5,5 @@ import './css/bootstrap.min.css';
 
 import App from './components/app';
 
-ReactDOM.render(<App />,
+ReactDOM.render(<App searchText = ''/>,
     document.querySelector('#root'));
