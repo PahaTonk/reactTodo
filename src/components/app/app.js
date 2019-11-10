@@ -31,7 +31,8 @@ export default class App extends Component {
             label,
             id: this.createItemId(label),
             important: false,
-            done: false
+            done: false,
+            show: true
         }
     };
 
@@ -69,16 +70,33 @@ export default class App extends Component {
         } );
     };
 
+    onSearchItems = (text) => {
+        this.setState( ({ todoData }) => {
+            const regExp = new RegExp(text, 'gi')
+            const newTodoData = [ ...todoData ].map( (item) => {
+                item.show = item.label.search(regExp) === -1 ? false : true;
+
+                return item;
+            });
+
+            return {
+                todoData: newTodoData
+            }
+        } )
+
+    };
+
     render () {
         const { todoData } = this.state;
-        const doneItems = todoData.filter( (item) => item.done ).length;
-        const otherItems = todoData.length - doneItems;
+        const showItems = todoData.filter( (item) => item.show ).length;
+        const doneItems = todoData.filter( (item) => item.done && item.show ).length;
+        const otherItems = showItems - doneItems;
 
         return (
             <div className='todo-app'>
                 <AppHeader toDo = { otherItems } done = { doneItems }/>
                 <div className='todo-panel d-flex'>
-                    <SearchPanel />
+                    <SearchPanel onSearchItems = { this.onSearchItems }/>
                     <ItemStatusFilter />
                 </div>
                 <TodoList

@@ -5,14 +5,19 @@ import './todo-list.css';
 
 const TodoList = ({ todos, onDeletedListItem, onTogglePropertyImportantOrDone }) => {
 
-    const elements = todos.map( ({ id, ...item }) => (
-        <li key = { id } className='list-group-item todo-list-item'>
-            <TodoListItem { ...item }
-                onDeletedListItem = { () => onDeletedListItem(id) }
-                onTogglePropertyImportantOrDone = { (stateName) => onTogglePropertyImportantOrDone(id, stateName) }
-            />
-        </li>
-    ) );
+    const elements = todos.map( ({ id, show,  ...item }) => {
+        const defaultClassNames = 'list-group-item todo-list-item';
+        const classNames = show ? defaultClassNames : `${defaultClassNames} d-none`;
+
+        return (
+            <li key = { id } className = { classNames }>
+                <TodoListItem { ...item }
+                    onDeletedListItem = { () => onDeletedListItem(id) }
+                    onTogglePropertyImportantOrDone = { (stateName) => onTogglePropertyImportantOrDone(id, stateName) }
+                />
+            </li>
+        )
+    } );
 
     return (
         <ul className='list-group todo-list'>
