@@ -11,26 +11,14 @@ export default class TodoListItem extends Component {
         important: false
     };
 
-    onLabelClick = () => {
-        this.setState( ({ done }) => ({
-            done: !done
-        }) );
-    };
-
-    onMarkImportant = () => {
-        this.setState( ({ important }) => ({
-            important: !important
-        }) );
-    }
-
-    checkClassNames (firstClassNames  = '') {
+    checkClassNames (firstClassNames  = '', important = false, done = false) {
         let classNames = firstClassNames;
 
-        if (this.state.done) {
+        if (done) {
             classNames += ' done';
         }
 
-        if (this.state.important) {
+        if (important) {
             classNames += ' important';
         }
 
@@ -38,27 +26,31 @@ export default class TodoListItem extends Component {
     }
 
     render () {
-        const { label, onDeletedListItem } = this.props;
-        const { important } = this.state;
-        let classNames = this.checkClassNames('todo-list-item');
-
+        const { label, onDeletedListItem, onTogglePropertyImportantOrDone,
+                important, done } = this.props;
         const itemStyles = {
             color: important ? 'steelblue' : 'black',
             fontWeight: important ? 'bold' : 'normal'
         };
+        const classNames = this.checkClassNames('todo-list-item', important, done);
 
         return (
             <span className = { classNames }>
                 <span
                     className = 'todo-list-item-label'
                     style = { itemStyles }
-                    onClick = { this.onLabelClick }>
+                    onClick = { () => {
+                        onTogglePropertyImportantOrDone('done');
+                    } }
+                >
                     {label}
                 </span>
 
                 <button type='button'
                     className='btn btn-outline-success btn-sm float-right'
-                    onClick = { this.onMarkImportant }
+                    onClick = { () => {
+                        onTogglePropertyImportantOrDone('important');
+                    } }
                 >
                     <FontAwesomeIcon icon='exclamation'/>
                 </button>

@@ -14,10 +14,25 @@ export default class App extends Component {
 
     state = {
         todoData: [
-            { label: 'Drink Coffee', id: 'dc' },
-            { label: 'Make Awesome App', id: 'maa' },
-            { label: 'Have a lunch', id: 'hl' }
+            this.createTodoItem('Drink Coffee'),
+            this.createTodoItem('Make Awesome App'),
+            this.createTodoItem('Have a lunch')
         ]
+    };
+
+    createItemId (text) {
+        const itemIdFirst = text.split(' ').map( (item) => item[0]).join('');
+
+        return `${itemIdFirst}-${++this.itemIdLast}`;
+    };
+
+    createTodoItem (label) {
+        return {
+            label,
+            id: this.createItemId(label),
+            important: false,
+            done: false
+        }
     };
 
     onDeletedListItem = (id) => {
@@ -27,24 +42,41 @@ export default class App extends Component {
     };
 
     onAddListItem = (text) => {
-        const itemIdFirst = text.split(' ').map( (item) => item[0]).join('');
-        const newItem = {
-            label: text,
-            important: false,
-            id: `${itemIdFirst}-${++this.itemIdLast}`
-        }
+        const newItem = this.createTodoItem(text);
 
         this.setState( ({ todoData }) => ({
             todoData: todoData.concat(newItem)
         }) );
     };
 
+    onTogglePropertyImportantOrDone = (id, stateName) => {
+        this.setState( ({ todoData }) => {
+            const index = todoData.findIndex(item => item.id === id);
+            const oldItem = todoData[index];
+            const newItem = {
+                ...oldItem,
+                [stateName]: !oldItem[stateName]
+            };
+            const newTodoData = [
+                ...todoData.slice(0, index),
+                newItem,
+                ...todoData.slice(index + 1)
+            ];
+
+            return {
+                todoData: newTodoData
+            };
+        } );
+    };
+
     render () {
         const { todoData } = this.state;
+        const doneItems = todoData.filter( (item) => item.done ).length;
+        const otherItems = todoData.length - doneItems;
 
         return (
             <div className='todo-app'>
-                <AppHeader toDo = {1} done = {3}/>
+                <AppHeader toDo = { otherItems } done = { doneItems }/>
                 <div className='todo-panel d-flex'>
                     <SearchPanel />
                     <ItemStatusFilter />
@@ -52,6 +84,7 @@ export default class App extends Component {
                 <TodoList
                     todos = { todoData }
                     onDeletedListItem = { this.onDeletedListItem }
+                    onTogglePropertyImportantOrDone = { this.onTogglePropertyImportantOrDone }
                 />
                 <ItemAddForm
                     onAddListItem = { this.onAddListItem }
