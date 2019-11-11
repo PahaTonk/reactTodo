@@ -18,7 +18,8 @@ export default class App extends Component {
             this.createTodoItem('Drink Coffee', this.props.searchText),
             this.createTodoItem('Make Awesome App', this.props.searchText),
             this.createTodoItem('Have a lunch', this.props.searchText)
-        ]
+        ],
+        activeElements: 'All'
     };
 
     createItemId (text) {
@@ -93,8 +94,23 @@ export default class App extends Component {
 
     };
 
+    onActiveElements = (activeElements) => {
+        this.setState({
+            activeElements
+        })
+    }
+
     render () {
-        const { todoData } = this.state;
+        const { todoData, activeElements } = this.state;
+        const todoDataFilter = this.state.todoData.filter( (item) => {
+            if (activeElements === 'Done') {
+                return item.done;
+            } else if (activeElements === 'Active') {
+                return !item.done;
+            }
+
+            return true;
+        });
         const showItems = todoData.filter( (item) => item.show ).length;
         const doneItems = todoData.filter( (item) => item.done && item.show ).length;
         const otherItems = showItems - doneItems;
@@ -104,10 +120,12 @@ export default class App extends Component {
                 <AppHeader toDo = { otherItems } done = { doneItems }/>
                 <div className='todo-panel d-flex'>
                     <SearchPanel onSearchItems = { this.onSearchItems }/>
-                    <ItemStatusFilter />
+                    <ItemStatusFilter
+                        onActiveElements = { this.onActiveElements }
+                    />
                 </div>
                 <TodoList
-                    todos = { todoData }
+                    todos = { todoDataFilter }
                     onDeletedListItem = { this.onDeletedListItem }
                     onTogglePropertyImportantOrDone = { this.onTogglePropertyImportantOrDone }
                 />
